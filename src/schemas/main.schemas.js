@@ -12,3 +12,12 @@ export const signInSchema = joi.object({
   email: joi.string().email().min(5).max(60).required(),
   password: joi.string().invalid("password").required(),
 });
+
+export const catSchema = joi.object({
+  name: joi.string().max(80).required(),
+  age: joi.string().max(40).required(),
+  color: joi.string().max(40).required(),
+  race: joi.number().min(1).required(),
+  description: joi.string().required(),
+  mainPic: joi.string().pattern(new RegExp("^https?://")).required(),
+});
