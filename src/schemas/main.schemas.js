@@ -18,6 +18,8 @@ export const catSchema = joi.object({
   age: joi.string().max(40).required(),
   color: joi.string().max(40).required(),
   race: joi.number().min(1).required(),
+  size: joi.string().required(),
   description: joi.string().required(),
   mainPic: joi.string().pattern(new RegExp("^https?://")).required(),
+  pics: joi.array().items(joi.string()),
 });
