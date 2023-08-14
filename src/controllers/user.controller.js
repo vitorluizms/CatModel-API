@@ -68,3 +68,22 @@ export async function getCatByUser(req, res) {
     res.status(500).send(err.message);
   }
 }
+
+export async function toggleDisponible(req, res) {
+  const { id } = req.params;
+  const { userId } = res.locals.user;
+  const { isDisponible } = req.body;
+  try {
+    const validate = await db.query(`SELECT * FROM cats WHERE id = $1`, [id]);
+    if (validate.rows[0].userId !== userId)
+      return res.status(401).send("Este gatinho não pertence a sua conta!");
+
+    await db.query(`UPDATE cats SET "isDisponible" = $1 WHERE id = $2`, [
+      isDisponible,
+      id,
+    ]);
+    res.status(200).send("Disponibilidade atualizada!");
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}

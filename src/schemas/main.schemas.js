@@ -22,3 +22,7 @@ export const catSchema = joi.object({
   description: joi.string().required(),
   mainPic: joi.string().pattern(new RegExp("^https?://")).required(),
 });
+
+export const disponibleSchema = joi.object({
+  isDisponible: joi.boolean().required(),
+});
