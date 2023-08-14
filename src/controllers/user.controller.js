@@ -1,6 +1,6 @@
-import db from "../database/database.connection.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
+import db from "../database/database.connection.js";
 
 export async function signUp(req, res) {
   const { name, email, password, cpf, contact } = req.body;
@@ -44,6 +44,23 @@ export async function signIn(req, res) {
       user.rows[0].id,
     ]);
     res.status(200).send({ token: token, name: user.rows[0].name });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+
+export async function getCatByUser() {
+  const { userId } = res.locals.user;
+  try {
+    const userCats = await db.query(`
+    SELECT cats.*, races.name AS race, users.name FROM cats
+    JOIN races ON races.id = cats.race
+    JOIN users ON users.id = $1
+    WHERE cats."userId" = $1
+    GROUP BY cats.name, races.name, users.name
+    ORDER BY cats.id
+    `);
+    res.status(200).send(userCats.rows);
   } catch (err) {
     res.status(500).send(err.message);
   }
