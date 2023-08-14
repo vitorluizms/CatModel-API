@@ -12,6 +12,6 @@ const usersRouter = Router();
 
 usersRouter.post("/signup", validateSchema(signUpSchema), signUp);
 usersRouter.post("/signin", validateSchema(signInSchema), signIn);
-usersRouter.get("cats/me", validateAuth, getCatByUser);
+usersRouter.get("/cats/me", validateAuth, getCatByUser);
 
 export default usersRouter;

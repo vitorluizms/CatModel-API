@@ -49,17 +49,20 @@ export async function signIn(req, res) {
   }
 }
 
-export async function getCatByUser() {
+export async function getCatByUser(req, res) {
   const { userId } = res.locals.user;
   try {
-    const userCats = await db.query(`
+    const userCats = await db.query(
+      `
     SELECT cats.*, races.name AS race, users.name FROM cats
-    JOIN races ON races.id = cats.race
-    JOIN users ON users.id = $1
-    WHERE cats."userId" = $1
-    GROUP BY cats.name, races.name, users.name
-    ORDER BY cats.id
-    `);
+      JOIN races ON races.id = cats.race
+      JOIN users ON users.id = $1
+      WHERE cats."userId" = $1
+      GROUP BY cats.id, races.name, users.name
+      ORDER BY cats.id
+    `,
+      [userId]
+    );
     res.status(200).send(userCats.rows);
   } catch (err) {
     res.status(500).send(err.message);
