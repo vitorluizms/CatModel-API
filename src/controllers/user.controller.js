@@ -54,7 +54,7 @@ export async function getCatByUser(req, res) {
   try {
     const userCats = await db.query(
       `
-    SELECT cats.*, races.name AS race, users.name FROM cats
+    SELECT cats.*, races.name AS race, users.name AS userName FROM cats
       JOIN races ON races.id = cats.race
       JOIN users ON users.id = $1
       WHERE cats."userId" = $1
