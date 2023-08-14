@@ -1,13 +1,12 @@
-import db from "../database/database.connection.js";
+import {
+  getAllCats,
+  getById,
+  insertCat,
+} from "../repositories/cats.repository.js";
 
 export const getCats = async (req, res) => {
   try {
-    const cats =
-      await db.query(`SELECT cats.id, cats.name, cats."mainPic", races.name AS race FROM cats
-                    JOIN races ON cats.race = races.id
-                    WHERE cats."isDisponible" = true
-                    GROUP BY cats.id, races.name
-                    ORDER BY cats.id;`);
+    const cats = await getAllCats();
     res.status(200).send(cats.rows);
   } catch (err) {
     res.status.send(err.message);
@@ -17,18 +16,7 @@ export const getCats = async (req, res) => {
 export const getCatById = async (req, res) => {
   const { id } = req.params;
   try {
-    const cat = await db.query(
-      `SELECT cats.*, users.name AS user, races.name AS "raceName", 
-      pics.url AS pics
-	FROM cats
-	LEFT JOIN races ON races.id = cats.race
-  LEFT JOIN users ON users.id = cats."userId"
-	LEFT JOIN pics ON pics."catId" = cats.id
-	WHERE cats.id = $1
-	GROUP BY cats.id, races.name, users.name, pics.url;
-    `,
-      [id]
-    );
+    const cat = await getById(id);
     delete cat.rows[0].race;
     delete cat.rows[0].userId;
 
@@ -43,11 +31,8 @@ export const createCat = async (req, res) => {
 
   const { name, age, color, race, description, size, mainPic } = req.body;
   try {
-    const promise = await db.query(
-      `INSERT INTO cats (name,"userId", age, color, race, description, size, "mainPic") 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;
-    `,
-      [name, userId, age, color, race, description, size, mainPic]
+    const promise = await insertCat(
+      name, userId, age, color, race, description, size, mainPic
     );
     res.status(201).send("Cadastro feito com sucesso!");
   } catch (err) {
