@@ -21,5 +21,4 @@ export const catSchema = joi.object({
   size: joi.string().required(),
   description: joi.string().required(),
   mainPic: joi.string().pattern(new RegExp("^https?://")).required(),
-  pics: joi.array().items(joi.string()),
 });

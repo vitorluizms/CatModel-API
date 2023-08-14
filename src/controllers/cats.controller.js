@@ -41,7 +41,7 @@ export const getCatById = async (req, res) => {
 export const createCat = async (req, res) => {
   const { userId } = res.locals.user;
 
-  const { name, age, color, race, description, size, mainPic, pics } = req.body;
+  const { name, age, color, race, description, size, mainPic } = req.body;
   try {
     const promise = await db.query(
       `INSERT INTO cats (name,"userId", age, color, race, description, size, "mainPic") 
@@ -49,14 +49,7 @@ export const createCat = async (req, res) => {
     `,
       [name, userId, age, color, race, description, size, mainPic]
     );
-    if (pics.length === 0)
-      return res.status(201).send("Cadastro feito com sucesso!");
-
-    await db.query(`INSERT INTO pics (url, "catId") VALUES ($1, $2);`, [
-      pics,
-      promise.rows[0].id,
-    ]);
-    res.status(201).send("Cadastro com sucesso!");
+    res.status(201).send("Cadastro feito com sucesso!");
   } catch (err) {
     res.status(500).send(err.message);
   }
