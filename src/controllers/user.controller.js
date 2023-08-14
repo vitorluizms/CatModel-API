@@ -76,7 +76,7 @@ export async function toggleDisponible(req, res) {
   try {
     const validate = await db.query(`SELECT * FROM cats WHERE id = $1`, [id]);
     if (validate.rows[0].userId !== userId)
-      return res.status(401).send("Este gatinho não pertence a sua conta!");
+      return res.status(400).send(validate);
 
     await db.query(`UPDATE cats SET "isDisponible" = $1 WHERE id = $2`, [
       isDisponible,
