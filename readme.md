@@ -1,40 +1,107 @@
-# This is a template for a back-end restful API
+## 😺 CAT MODELS API
 
-### It contains the following libraries as default dependencies:
+![GitHub repo size](https://img.shields.io/github/repo-size/vitorluizms/CatModel-API?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/count/vitorluizms/CatModel-API?style=for-the-badge)
 
-- [mongodb](https://www.npmjs.com/package/mongodb)
-- [dotenv](https://www.npmjs.com/package/dotenv)
-- [joi](https://www.npmjs.com/package/joi)
-- [express](https://www.npmjs.com/package/express)
-- [cors](https://www.npmjs.com/package/cors)
-- [uuid](https://www.npmjs.com/package/uuid)
+Essa é a API RESTful para à uma agência de gatos modelos, nela é possível cadastrar um usuário, fazer login, buscar todos o modelos, buscar um em específico pelo ID, cadastrar um modelo, estando logado é possível buscar todos os seus modelos e gerenciá-los.
 
-### Requirements
+## 🌐 Deploy
 
-- [mongodb version 6.0 or later](https://www.mongodb.com/)
-- [node.js](https://nodejs.org/en)
+O deploy do banco foi feito no ElephantSQL, e da API no Render.
 
-## Usage
+URL da API: `https://catmodel-api.onrender.com`
 
-- Development mode -> auto-reloads when a file in the app is modified.
+## 💻 Pré-requisitos
 
-```bash
-npm run dev
-```
+Antes de começar, verifique se você atendeu aos seguintes requisitos:
 
-- Non development mode -> need to re-run after modify a script.
+- Node.js: v18.16.1 (Utilizado no desenvolvimento);
+- NPM: v9.5.1 (Utilizado no desenvolvimento);
+- Postgres: v16.1 (Utilizado no desenvolvimento);
 
-```bash
-npm start
-```
+## 🔧 Tecnologias
 
-## !Attention!
+Para a construção do projeto foi utilizado as seguintes tecnologias:
 
-This template comes with a [.env](.env) file that normally you <span style="color: red"> do not </span>  want to <span style="color: orange"> commit </span> case it usually
-is a file that you store <span style="color: green"> API keys </span>  and or other sensitive information.
+- Javascript ES6;
+- Node: v18.16.1;
+- Express (Framework de Node.js): v4.18.2;
+- PostgreSQL (Banco de dados);
+- GitHub (versionamento de código);
+- Joi (validação de campos): v17.11.0;
+- Nodemon (Reinicialização automática do servidor): v3.0.1.
 
-You probally want to add a line to the .gitinore file with the text below  <span style="color: red"> so it wont </span> be <span style="color: yellow"> pushed </span> to your repository on the next commit.
+## 📏Padronização
 
-```bash
-.env
-```
+Neste projeto foi utilizado:
+
+- ESLint para padronizar o código e manter consistência,
+- Prettier para autoformatação do código
+- Husky para validar e padronizar os commits;
+
+## 🚀 Instalando CAT MODELS API
+
+Para instalar o Cat Models API, siga estas etapas:
+
+1. Clone o repositório: `git clone https://github.com/vitorluizms/CatModel-API`;
+2. Acesse o diretório do projeto: `cd CatModel-API`;
+3. Instale as dependências: `npm install` ou `npm i`.
+
+## 🗄️ Banco de Dados
+
+O Script para criar o banco de dados é o seguinte:
+
+`CREATE TABLE users` (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(60) NOT NULL,
+	email VARCHAR(100) NOT NULL UNIQUE,
+	password VARCHAR(60) NOT NULL,
+	cpf VARCHAR(11) NOT NULL UNIQUE,
+	contact VARCHAR(11) NOT NULL UNIQUE
+);
+
+`CREATE TABLE sessions` (
+	id SERIAL PRIMARY KEY,
+	"userId" INTEGER REFERENCES "users"("id"),
+	token TEXT NOT NULL
+);
+
+`CREATE TABLE races` (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(40) NOT NULL
+); 
+
+`CREATE TABLE cats` (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(80) NOT NULL,
+	"userId" INTEGER REFERENCES "users"("id"),
+    "mainPic" INTEGER REFERENCES "pics("id)",
+ 	age INTEGER NOT NULL, 
+	color VARCHAR(40) NOT NULL,
+	race INTEGER REFERENCES "races"("id") NOT NULL,
+	description TEXT NOT NULL,
+	size VARCHAR(30) NOT NULL,
+	"isDisponible" BOOL DEFAULT true
+);
+
+`CREATE TABLE pics` (
+	id SERIAL PRIMARY KEY,
+	url TEXT[] NOT NULL,
+	"catId" INTEGER REFERENCES "cats"("id")
+);
+
+## ☕ Usando CAT MODELS API
+
+Para usar, siga estas etapas:
+
+1. Desenvolvimento: `npm run dev`;
+2. Execução de Produção: `npm run start`;
+
+## 🚀 GitFlow
+
+Durante o desenvolvimento foi utilizado conceitos de GitFlow, juntamente com a extensão Git Flow para facilitar o uso.
+
+## 📞 Contatos
+
+linkedin: `https://www.linkedin.com/in/vitorluizmartins/`
+gmail: `vitor.luiz.eer@gmail.com`
