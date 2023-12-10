@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "start": "node ./src/app.js",
-    "dev": "npx nodemon ./src/app.js"
+    "dev": "npx nodemon ./src/app.js",
+    "lint": "lint .",
+    "precommit": "chmod +x .husky/pre-commit",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
@@ -16,7 +19,16 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "joi": "^17.9.2",
+    "lint-staged": "^15.2.0",
     "pg": "^8.11.1",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "husky": "^8.0.0"
   }
 }
