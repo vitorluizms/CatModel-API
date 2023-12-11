@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
-import { createUser, insertSession, validateData, validateEmail } from '../repositories/user.repository';
-import { conflictError } from '../errors/conflictError';
-import { notFoundError } from '../errors/notFoundError';
+import { createUser, insertSession, validateData, validateEmail } from '../repositories/user.repository.js';
+import { conflictError } from '../errors/conflictError.js';
+import { notFoundError } from '../errors/notFoundError.js';
 
 async function validateUser(email, cpf, contact) {
   const validate = await validateData(email, cpf, contact);
@@ -16,7 +16,7 @@ async function signUp({ name, email, password, cpf, contact }) {
   await createUser({ name, email, cpf, hashPass, contact });
 }
 
-async function validateUserEmail(email) {
+async function validateUserEmail(email, password) {
   const user = await validateEmail(email);
   if (user.rowCount === 0 || !bcrypt.compareSync(password, user.rows[0].password))
     throw notFoundError('email/senha inválido');
@@ -25,7 +25,7 @@ async function validateUserEmail(email) {
 }
 
 async function signIn(email, password) {
-  const user = await validateUserEmail();
+  const user = await validateUserEmail(email, password);
 
   const token = uuid();
   await insertSession(user.rows[0].id, token);

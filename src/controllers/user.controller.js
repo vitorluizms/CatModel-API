@@ -1,8 +1,4 @@
-import {
-  getUserCats,
-  updateCat,
-  validateCat,
-} from '../repositories/user.repository.js';
+import { catsService } from '../services/cats.service.js';
 import { userService } from '../services/user.service.js';
 
 export async function signUp(req, res) {
@@ -21,25 +17,16 @@ export async function signIn(req, res) {
 
 export async function getCatByUser(req, res) {
   const { userId } = res.locals.user;
-  try {
-    const userCats = await getUserCats(userId);
-    res.status(200).send(userCats.rows);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
+  const userCats = await catsService.getCatsByUser(userId);
+
+  res.status(200).send(userCats.rows);
 }
 
 export async function toggleDisponible(req, res) {
   const { id } = req.params;
   const { userId } = res.locals.user;
   const { isDisponible } = req.body;
-  try {
-    const validate = await validateCat(id);
-    if (validate.rows[0].userId !== userId) return res.status(400).send('Este gatinho não pertence ao seu usuário!');
 
-    await updateCat(isDisponible, id);
-    res.status(200).send('Disponibilidade atualizada!');
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
+  await catsService.toggleDisponible(id, userId, isDisponible);
+  res.status(200).send('Disponibilidade atualizada!');
 }
