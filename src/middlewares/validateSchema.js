@@ -3,15 +3,15 @@ export function validateSchema(schema) {
     const validate = schema.validate(req.body, { abortEarly: false });
 
     if (validate.error) {
-      let errors = "";
-      validate.error.details.forEach((detail, index) => {
-        if (index !== validate.error.details.length - 1)
-          errors += `${detail.message}\n`;
-        else errors += detail.message;
-      });
+      const errors = throwError(validate.error);
       return res.status(422).send(errors);
     }
 
     next();
   };
+}
+
+function throwError(error) {
+  const errorMessage = error.details.map(d => d.message).join(', ');
+  return errorMessage;
 }
